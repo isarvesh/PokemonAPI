@@ -1,25 +1,25 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import Search from './Search';
+import Pokemon from './Pokemon';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const [pokemon, setPokemon] = useState(null);
+  const [error, setError] = useState('');
+
+  const searchPokemon = async (query) => {
+    try {
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`); const data = await response.json();
+
+  setPokemon(data);
+  setError('');
+} catch (error) {
+  console.error(error);
+  setPokemon(null);
+  setError(`No results found for "${query}"`);
 }
+};
+
+return ( <div className="App"> <h1>Pokémon API</h1> <Search searchPokemon={searchPokemon} /> {error && <p className="error">{error}</p>} {pokemon && <Pokemon pokemon={pokemon} />} </div> ); }
 
 export default App;
